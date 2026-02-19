@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev' version '2.0.78'
+}
+
+group = 'com.example.lanbroadcast'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+neoForge {
+    version = project.neo_version
+
+    mods {
+        lanbroadcast {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+
+tasks.processResources {
+    var replaceProperties = [
+            minecraft_version: minecraft_version,
+            neo_version      : neo_version,
+            mod_id           : mod_id,
+            mod_name         : mod_name,
+            mod_version      : mod_version,
+            mod_authors      : mod_authors,
+            mod_description  : mod_description
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
+    }
+}
